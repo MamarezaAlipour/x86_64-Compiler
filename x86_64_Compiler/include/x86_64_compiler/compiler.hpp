@@ -177,13 +177,13 @@ namespace x86_64 {
 		struct MemRef
 		{
 		public: // methods
-			MemRef(int8_t scale, const RegRef& index, const RegRef& base);
+			MemRef(int8_t scale, RegRef const& index, RegRef const& base);
 
 			MemRef operator+(int64_t offset) const;
 			MemRef operator-(int64_t offset) const;
 
 		private: // methods
-			MemRef(const MemRef& ref, int64_t disp);
+			MemRef(MemRef const& ref, int64_t disp);
 
 		public: // fields
 			int8_t scale;
@@ -193,7 +193,7 @@ namespace x86_64 {
 			bool disp_specified;
 		};
 
-		friend MemRef operator+(int64_t offset, const MemRef& ref);
+		friend MemRef operator+(int64_t offset, MemRef const& ref);
 
 		struct SymRef
 		{
@@ -205,11 +205,11 @@ namespace x86_64 {
 			};
 
 		public: // methods
-			SymRef(Type type, const std::string& name);
-			SymRef(const SymRef& ref);
+			SymRef(Type type, std::string const& name);
+			SymRef(SymRef const& ref);
 			SymRef(SymRef&& ref);
 
-			SymRef& operator=(const SymRef& ref);
+			SymRef& operator=(SymRef const& ref);
 			SymRef& operator=(SymRef&& ref);
 
 			~SymRef();
@@ -226,7 +226,7 @@ namespace x86_64 {
 			int64_t offset;
 		};
 
-		friend SymRef operator+(int64_t offset, const SymRef& ref);
+		friend SymRef operator+(int64_t offset, SymRef const& ref);
 
 		struct Ref
 		{
@@ -238,12 +238,12 @@ namespace x86_64 {
 			};
 
 		public: // methods
-			Ref(const RegRef& ref);
-			Ref(const MemRef& ref);
-			Ref(const Ref& ref);
+			Ref(RegRef const& ref);
+			Ref(MemRef const& ref);
+			Ref(Ref const& ref);
 			Ref(Ref&& ref);
 
-			Ref& operator=(const Ref& ref);
+			Ref& operator=(Ref const& ref);
 			Ref& operator=(Ref&& ref);
 
 			Ref operator+(int64_t offset) const;
@@ -258,7 +258,7 @@ namespace x86_64 {
 			};
 		};
 
-		friend Ref operator+(int64_t offset, const Ref& ref);
+		friend Ref operator+(int64_t offset, Ref const& ref);
 
 	public: // methods
 		Compiler();

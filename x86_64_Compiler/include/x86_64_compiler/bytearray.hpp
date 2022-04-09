@@ -11,10 +11,10 @@ namespace x86_64 {
 	{
 	public: // methods
 		explicit ByteArray();
-		explicit ByteArray(const ByteArray& array);
+		explicit ByteArray(ByteArray const& array);
 		explicit ByteArray(ByteArray&& array);
 
-		ByteArray& operator=(const ByteArray& array);
+		ByteArray& operator=(ByteArray const&& array);
 		ByteArray& operator=(ByteArray&& array);
 
 		uint8_t* push(const uint8_t* data, std::size_t size);
@@ -54,14 +54,14 @@ namespace x86_64 {
 	};
 
 	template <class T>
-	uint8_t* ByteArray::push(const T& value)
+	uint8_t* ByteArray::push(T const& value)
 	{
 		push(reinterpret_cast<const uint8_t*>(&value), sizeof(T));
 		return back(sizeof(T));
 	}
 
 	template <>
-	inline uint8_t* ByteArray::push(const ByteArray& array)
+	inline uint8_t* ByteArray::push(ByteArray const& array)
 	{
 		push(array.data(), array.size());
 		return back(array.size());
