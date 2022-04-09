@@ -14,7 +14,7 @@ namespace x86_64 {
 		explicit ByteArray(ByteArray const& array);
 		explicit ByteArray(ByteArray&& array);
 
-		ByteArray& operator=(ByteArray const&& array);
+		ByteArray& operator=(ByteArray const& array);
 		ByteArray& operator=(ByteArray&& array);
 
 		uint8_t* push(const uint8_t* data, std::size_t size);
