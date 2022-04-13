@@ -694,7 +694,7 @@ namespace x86_64 {
 		pushReloc({ref.name, ref.type, static_cast<int64_t>(sectionSize(TEXT) - 4)});
 	}
 
-	void Compiler::Impl::lcall(const SymRef& ref) {
+	void Compiler::Impl::lcall(SymRef const& ref) {
 		if (ref.type == SymRef::Type::Rel) {
 			throw std::runtime_error("far call cannot be relative");
 		}
@@ -717,11 +717,11 @@ namespace x86_64 {
 		gen(imm8);
 	}
 
-	void Compiler::Impl::lea(const MemRef& mem_ref, const RegRef& reg_ref) {
+	void Compiler::Impl::lea(MemRef const& mem_ref, RegRef const& reg_ref) {
 		instr_no_w(0x8d, reg_ref.reg, reg_ref.size, mem_ref);
 	}
 
-	void Compiler::Impl::lea(const SymRef& sym_ref, const RegRef& reg_ref) {
+	void Compiler::Impl::lea(SymRef const& sym_ref, RegRef const& reg_ref) {
 		lea(MemRef(0, NOREG, sym_ref.type == SymRef::Type::Rel ? RIP : NOREG) + sym_ref.offset, reg_ref);
 
 		pushReloc({sym_ref.name, sym_ref.type, static_cast<int64_t>(sectionSize(TEXT) - 4)});
@@ -736,7 +736,7 @@ namespace x86_64 {
 
 	void Compiler::Impl::leaveq() { genb(0xc9); }
 
-	void Compiler::Impl::mov(const Ref& src, const Ref& dst) {
+	void Compiler::Impl::mov(Ref const& src, Ref const& dst) {
 		if ((src.type == Ref::Type::Reg && src.reg.reg == 0 && dst.type == Ref::Type::Mem && dst.mem.base == NOREG &&
 			 dst.mem.index == NOREG && !isDword(dst.mem.disp)) ||
 			(dst.type == Ref::Type::Reg && dst.reg.reg == 0 && src.type == Ref::Type::Mem && src.mem.base == NOREG &&
@@ -747,30 +747,30 @@ namespace x86_64 {
 		}
 	}
 
-	void Compiler::Impl::mov(const SymRef& src, const RegRef& dst) {
+	void Compiler::Impl::mov(SymRef const& src, RegRef const& dst) {
 		mov(MemRef(0, NOREG, src.type == SymRef::Type::Rel ? RIP : NOREG) + src.offset, dst);
 		pushReloc({src.name, src.type, static_cast<int64_t>(sectionSize(TEXT) - 4)});
 	}
 
-	void Compiler::Impl::mov(const RegRef& src, const SymRef& dst) {
+	void Compiler::Impl::mov(RegRef const& src, SymRef const& dst) {
 		mov(src, MemRef(0, NOREG, dst.type == SymRef::Type::Rel ? RIP : NOREG) + dst.offset);
 		pushReloc({dst.name, dst.type, static_cast<int64_t>(sectionSize(TEXT) - 4)});
 	}
 
-	void Compiler::Impl::movb(uint8_t imm, const Ref& dst) { mov(imm, dst); }
+	void Compiler::Impl::movb(uint8_t imm, Ref const& dst) { mov(imm, dst); }
 
-	void Compiler::Impl::movw(uint16_t imm, const Ref& dst) { mov(imm, dst); }
+	void Compiler::Impl::movw(uint16_t imm, Ref const& dst) { mov(imm, dst); }
 
-	void Compiler::Impl::movl(uint32_t imm, const Ref& dst) { mov(imm, dst); }
+	void Compiler::Impl::movl(uint32_t imm, Ref const& dst) { mov(imm, dst); }
 
-	void Compiler::Impl::movl(const SymRef& imm, const Ref& dst) {
+	void Compiler::Impl::movl(SymRef const& imm, Ref const& dst) {
 		mov(static_cast<uint32_t>(imm.offset), dst);
 		pushReloc({imm.name, imm.type, static_cast<int64_t>(sectionSize(TEXT) - 4)});
 	}
 
-	void Compiler::Impl::movq(uint64_t imm, const Ref& dst) { mov(imm, dst); }
+	void Compiler::Impl::movq(uint64_t imm, Ref const& dst) { mov(imm, dst); }
 
-	void Compiler::Impl::mov(const Imm& imm, const Ref& dst) {
+	void Compiler::Impl::mov(Imm const& imm, Ref const& dst) {
 		if (dst.type == Ref::Type::Mem || (dst.reg.size == Size::Qword && isDword(imm.qword))) {
 			instr(0xc6, 0, imm, dst);
 		} else {
@@ -786,7 +786,7 @@ namespace x86_64 {
 
 	void Compiler::Impl::nop() { genb(0x90); }
 
-	void Compiler::Impl::pop(const RegRef& ref) {
+	void Compiler::Impl::pop(RegRef const& ref) {
 		if (ref.size == Size::Word) {
 			gen(c_operand_size_override_prefix);
 		}
@@ -794,9 +794,9 @@ namespace x86_64 {
 		genb(0x58 + (ref.reg & c_x86_mask));
 	}
 
-	void Compiler::Impl::popw(const MemRef& ref) { instr_no_w(0x8f, 0, Size::Word, ref); }
+	void Compiler::Impl::popw(MemRef const& ref) { instr_no_w(0x8f, 0, Size::Word, ref); }
 
-	void Compiler::Impl::popq(const MemRef& ref) { instr_no_w(0x8f, 0, Size::Dword, ref); }
+	void Compiler::Impl::popq(MemRef const& ref) { instr_no_w(0x8f, 0, Size::Dword, ref); }
 
 	void Compiler::Impl::push(uint32_t imm) { pushq(imm); }
 
@@ -804,7 +804,7 @@ namespace x86_64 {
 
 	void Compiler::Impl::pushq(uint32_t imm) { push(imm); }
 
-	void Compiler::Impl::push(const RegRef& ref) {
+	void Compiler::Impl::push(RegRef const& ref) {
 		if (ref.size == Size::Word) {
 			gen(c_operand_size_override_prefix);
 		}
@@ -812,21 +812,21 @@ namespace x86_64 {
 		genb(0x50 + (ref.reg & c_x86_mask));
 	}
 
-	void Compiler::Impl::pushw(const MemRef& ref) { instr_no_w(0xff, 6, Size::Word, ref); }
+	void Compiler::Impl::pushw(MemRef const& ref) { instr_no_w(0xff, 6, Size::Word, ref); }
 
-	void Compiler::Impl::pushq(const MemRef& ref) { instr_no_w(0xff, 6, Size::Dword, ref); }
+	void Compiler::Impl::pushq(MemRef const& ref) { instr_no_w(0xff, 6, Size::Dword, ref); }
 
-	void Compiler::Impl::pushw(const SymRef& ref) {
+	void Compiler::Impl::pushw(SymRef const& ref) {
 		pushw(MemRef(0, NOREG, ref.type == SymRef::Type::Rel ? RIP : NOREG) + ref.offset);
 		pushReloc({ref.name, ref.type, static_cast<int64_t>(sectionSize(TEXT) - 4)});
 	}
 
-	void Compiler::Impl::pushq(const SymRef& ref) {
+	void Compiler::Impl::pushq(SymRef const& ref) {
 		pushq(MemRef(0, NOREG, ref.type == SymRef::Type::Rel ? RIP : NOREG) + ref.offset);
 		pushReloc({ref.name, ref.type, static_cast<int64_t>(sectionSize(TEXT) - 4)});
 	}
 
-	void Compiler::Impl::push(const Imm& imm) {
+	void Compiler::Impl::push(Imm const& imm) {
 		if (imm.size == Size::Word) {
 			gen(c_operand_size_override_prefix);
 		}
@@ -859,17 +859,17 @@ namespace x86_64 {
 
 	void Compiler::Impl::lret() { genb(0xcb); }
 
-	void Compiler::Impl::sub(const Ref& src, const Ref& dst) { instr(0x28, src, dst); }
+	void Compiler::Impl::sub(Ref const& src, Ref const& dst) { instr(0x28, src, dst); }
 
-	void Compiler::Impl::subb(uint8_t imm, const Ref& dst) { sub(imm, dst); }
+	void Compiler::Impl::subb(uint8_t imm, Ref const& dst) { sub(imm, dst); }
 
-	void Compiler::Impl::subw(uint16_t imm, const Ref& dst) { sub(imm, dst); }
+	void Compiler::Impl::subw(uint16_t imm, Ref const& dst) { sub(imm, dst); }
 
-	void Compiler::Impl::subl(uint32_t imm, const Ref& dst) { sub(imm, dst); }
+	void Compiler::Impl::subl(uint32_t imm, Ref const& dst) { sub(imm, dst); }
 
-	void Compiler::Impl::subq(uint64_t imm, const Ref& dst) { sub(imm, dst); }
+	void Compiler::Impl::subq(uint64_t imm, Ref const& dst) { sub(imm, dst); }
 
-	void Compiler::Impl::sub(const Imm& imm, const Ref& dst) {
+	void Compiler::Impl::sub(Imm const& imm, Ref const& dst) {
 		if (dst.type == Ref::Type::Reg && dst.reg.reg == 0) {
 			///@ make instr for this case
 
@@ -896,7 +896,7 @@ namespace x86_64 {
 		}
 	}
 
-	void Compiler::Impl::instr(uint8_t opcode, const Ref& src, const Ref& dst) {
+	void Compiler::Impl::instr(uint8_t opcode, Ref const& src, Ref const& dst) {
 		RegRef reg_ref = src.type == Ref::Type::Reg ? src.reg : dst.reg;
 		Ref rm_ref = src.type == Ref::Type::Reg ? dst : src;
 
@@ -907,7 +907,7 @@ namespace x86_64 {
 		instr(opcode, reg_ref.reg, reg_ref.size, rm_ref);
 	}
 
-	void Compiler::Impl::instr(uint8_t opcode, int8_t reg, Size size, const Ref& rm_ref) {
+	void Compiler::Impl::instr(uint8_t opcode, int8_t reg, Size size, Ref const& rm_ref) {
 		if (size != Size::Byte) {
 			opcode += c_opcode_field_w;
 		}
@@ -915,7 +915,7 @@ namespace x86_64 {
 		instr_no_w(opcode, reg, size, rm_ref);
 	}
 
-	void Compiler::Impl::instr_no_w(uint8_t opcode, int8_t reg, Size size, const Ref& rm_ref) {
+	void Compiler::Impl::instr_no_w(uint8_t opcode, int8_t reg, Size size, Ref const& rm_ref) {
 		if (rm_ref.type == Ref::Type::Mem &&
 			((rm_ref.mem.base != NOREG && rm_ref.mem.base.size != Size::Qword) ||
 			 (rm_ref.mem.index != NOREG && rm_ref.mem.index.size != Size::Qword))) {
@@ -934,7 +934,7 @@ namespace x86_64 {
 		genRef(reg, rm_ref);
 	}
 
-	void Compiler::Impl::instr(uint8_t opcode, int8_t ext, const Imm& imm, const Ref& dst) {
+	void Compiler::Impl::instr(uint8_t opcode, int8_t ext, Imm const& imm, Ref const& dst) {
 		instr(opcode, ext, imm.size, dst);
 
 		if (imm.size == Size::Qword) {
@@ -944,7 +944,7 @@ namespace x86_64 {
 		}
 	}
 
-	void Compiler::Impl::genREXPrefix(const int8_t& reg, Size size, const int8_t& index, const int8_t& base) {
+	void Compiler::Impl::genREXPrefix(int8_t const& reg, Size size, int8_t const& index, int8_t const& base) {
 		uint8_t rex = c_rex_field_w * (size == Size::Qword) + c_rex_field_b * (base > c_x86_mask) +
 			c_rex_field_x * (index > c_x86_mask) + c_rex_field_r * (reg > c_x86_mask);
 
@@ -953,7 +953,7 @@ namespace x86_64 {
 		}
 	}
 
-	void Compiler::Impl::genRef(int8_t reg, const Ref& ref) {
+	void Compiler::Impl::genRef(int8_t reg, Ref const& ref) {
 		if (ref.type == Ref::Type::Reg) {
 			genRef(reg, ref.reg);
 		} else {
@@ -961,11 +961,11 @@ namespace x86_64 {
 		}
 	}
 
-	void Compiler::Impl::genRef(int8_t reg, const RegRef& reg_ref) {
+	void Compiler::Impl::genRef(int8_t reg, RegRef const& reg_ref) {
 		genCompositeByte(c_mod_reg, reg & c_x86_mask, reg_ref.reg & c_x86_mask);
 	}
 
-	void Compiler::Impl::genRef(int8_t reg, const MemRef& mem_ref) {
+	void Compiler::Impl::genRef(int8_t reg, MemRef const& mem_ref) {
 		if (!isDword(mem_ref.disp)) {
 			gen(mem_ref.disp);
 			return;
@@ -1007,7 +1007,7 @@ namespace x86_64 {
 		}
 	}
 
-	void Compiler::Impl::genSIB(const MemRef& mem_ref) {
+	void Compiler::Impl::genSIB(MemRef const& mem_ref) {
 		int8_t scale = -1;
 		uint8_t index = mem_ref.index.reg & c_x86_mask;
 		uint8_t base = mem_ref.base.reg & c_x86_mask;
@@ -1068,17 +1068,17 @@ namespace x86_64 {
 		return isSectionDefined(id) ? section(id).size() : 0;
 	}
 
-	bool Compiler::Impl::isSymbolDefined(const std::string& name) const {
+	bool Compiler::Impl::isSymbolDefined(std::string const& name) const {
 		return m_symbols.find(name) != m_symbols.end();
 	}
 
-	void Compiler::Impl::pushSymbol(const std::string& name, const std::string& base_symbol, std::size_t offset) {
+	void Compiler::Impl::pushSymbol(std::string const& name, std::string const& base_symbol, std::size_t offset) {
 		if (isSymbolDefined(name))
 			throw std::runtime_error("symbol '" + name + "' is already defined");
 
 		m_symbols[name] = Symbol {base_symbol, offset};
 	}
 
-	void Compiler::Impl::pushReloc(const Compiler::Impl::Reloc& reloc) { m_relocs.emplace_back(reloc); }
+	void Compiler::Impl::pushReloc(Compiler::Impl::Reloc const& reloc) { m_relocs.emplace_back(reloc); }
 
 } // namespace x86_64
