@@ -17,10 +17,10 @@ namespace x86_64 {
 		ByteArray& operator=(ByteArray const& array);
 		ByteArray& operator=(ByteArray&& array);
 
-		uint8_t* push(const uint8_t* data, std::size_t size);
+		uint8_t* push(uint8_t const* data, std::size_t size);
 
 		template <class T>
-		uint8_t* push(const T& value);
+		uint8_t* push(T const& value);
 
 		template <class T>
 		T* push();
@@ -39,12 +39,12 @@ namespace x86_64 {
 		std::size_t size() const;
 		std::size_t capacity() const;
 
-		void write(const std::string& file_name) const;
+		void write(std::string const& file_name) const;
 		void write(std::ostream& stream) const;
 
 		friend std::ostream& operator<<(
 			std::ostream& stream,
-			const ByteArray& array);
+			ByteArray const& array);
 
 	private: // methods
 		uint8_t* back(std::size_t size);
@@ -56,7 +56,7 @@ namespace x86_64 {
 	template <class T>
 	uint8_t* ByteArray::push(T const& value)
 	{
-		push(reinterpret_cast<const uint8_t*>(&value), sizeof(T));
+		push(reinterpret_cast<uint8_t const*>(&value), sizeof(T));
 		return back(sizeof(T));
 	}
 

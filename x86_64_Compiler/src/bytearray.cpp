@@ -11,7 +11,7 @@ namespace x86_64 {
 		m_data.reserve(0x1000);
 	}
 
-	ByteArray::ByteArray(const ByteArray& array)
+	ByteArray::ByteArray(ByteArray const& array)
 		: m_data{ array.m_data }
 	{
 	}
@@ -21,7 +21,7 @@ namespace x86_64 {
 	{
 	}
 
-	ByteArray& ByteArray::operator=(const ByteArray& array)
+	ByteArray& ByteArray::operator=(ByteArray const& array)
 	{
 		m_data = array.m_data;
 		return *this;
@@ -33,7 +33,7 @@ namespace x86_64 {
 		return *this;
 	}
 
-	uint8_t* ByteArray::push(const uint8_t* data, std::size_t size)
+	uint8_t* ByteArray::push(uint8_t const* data, std::size_t size)
 	{
 		if (size > 0)
 		{
