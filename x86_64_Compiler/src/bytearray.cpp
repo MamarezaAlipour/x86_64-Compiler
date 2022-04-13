@@ -38,8 +38,7 @@ namespace x86_64 {
 	}
 
 	void ByteArray::pop(std::size_t size) {
-		m_data.erase(m_data.end() - static_cast<int32_t>(std::min(size, m_data.size())),
-					 m_data.end());
+		m_data.erase(m_data.end() - static_cast<int32_t>(std::min(size, m_data.size())), m_data.end());
 	}
 
 	uint8_t ByteArray::operator[](std::size_t index) const { return m_data[index]; }
@@ -60,8 +59,7 @@ namespace x86_64 {
 	}
 
 	void ByteArray::write(std::ostream& stream) const {
-		stream.write(reinterpret_cast<char const*>(m_data.data()),
-					 static_cast<std::streamsize>(size()));
+		stream.write(reinterpret_cast<char const*>(m_data.data()), static_cast<std::streamsize>(size()));
 	}
 
 	std::ostream& operator<<(std::ostream& stream, const ByteArray& array) {
