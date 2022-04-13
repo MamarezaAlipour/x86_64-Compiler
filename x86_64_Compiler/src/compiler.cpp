@@ -82,23 +82,23 @@ namespace x86_64 {
 	public: // methods
 		void reset();
 
-		void rdata(const std::string& name, const uint8_t* data, std::size_t size);
-		void data(const std::string& name, const uint8_t* data, std::size_t size);
-		void bss(const std::string& name, std::size_t size);
+		void rdata(std::string const& name, uint8_t const* data, std::size_t size);
+		void data(std::string const& name, uint8_t const* data, std::size_t size);
+		void bss(std::string const& name, std::size_t size);
 
 		const ByteArray& getCode() const;
 
-		RegRef reg(const RegRef& reg) const;
+		RegRef reg(RegRef const& reg) const;
 
 		MemRef mem(int64_t disp) const;
-		MemRef mem(const RegRef& reg) const;
-		MemRef mem(const RegRef& index, int8_t scale) const;
-		MemRef mem(const RegRef& base, const RegRef& index, int8_t scale) const;
+		MemRef mem(RegRef const& reg) const;
+		MemRef mem(RegRef const& index, int8_t scale) const;
+		MemRef mem(RegRef const& base, RegRef const& index, int8_t scale) const;
 
-		SymRef abs(const std::string& name);
-		SymRef rel(const std::string& name);
+		SymRef abs(std::string const& name);
+		SymRef rel(std::string const& name);
 
-		void relocate(const std::string& name, int64_t value);
+		void relocate(std::string const& name, int64_t value);
 
 		void constant(uint8_t value);
 		void constant(uint16_t value);
@@ -106,58 +106,58 @@ namespace x86_64 {
 		void constant(uint64_t value);
 		void constant(double value);
 
-		void add(const Ref& src, const Ref& dst);
-		void addb(uint8_t imm, const Ref& dst);
-		void addw(uint16_t imm, const Ref& dst);
-		void addl(uint32_t imm, const Ref& dst);
-		void addq(uint64_t imm, const Ref& dst);
+		void add(const Ref& src, Ref const& dst);
+		void addb(uint8_t imm, Ref const& dst);
+		void addw(uint16_t imm, Ref const& dst);
+		void addl(uint32_t imm, Ref const& dst);
+		void addq(uint64_t imm, Ref const& dst);
 
 		void call(int32_t disp);
 		void callw(int16_t disp);
 		void callq(int32_t disp);
-		void call(const Ref& ref);
-		void callw(const Ref& ref);
-		void callq(const Ref& ref);
-		void lcall(const Ref& ref);
-		void lcallw(const Ref& ref);
-		void lcalll(const Ref& ref);
-		void call(const SymRef& ref);
-		void lcall(const SymRef& ref);
+		void call(Ref const& ref);
+		void callw(Ref const& ref);
+		void callq(Ref const& ref);
+		void lcall(Ref const& ref);
+		void lcallw(Ref const& ref);
+		void lcalll(Ref const& ref);
+		void call(SymRef const& ref);
+		void lcall(SymRef const& ref);
 
 		void enter(uint16_t imm16, uint8_t imm8);
 		void enterw(uint16_t imm16, uint8_t imm8);
 		void enterq(uint16_t imm16, uint8_t imm8);
 
-		void lea(const MemRef& mem_ref, const RegRef& reg_ref);
-		void lea(const SymRef& sym_ref, const RegRef& reg_ref);
+		void lea(MemRef const& mem_ref, RegRef const& reg_ref);
+		void lea(SymRef const& sym_ref, RegRef const& reg_ref);
 
 		void leave();
 		void leavew();
 		void leaveq();
 
-		void mov(const Ref& src, const Ref& dst);
-		void mov(const SymRef& src, const RegRef& dst);
-		void mov(const RegRef& src, const SymRef& dst);
-		void movb(uint8_t imm, const Ref& dst);
-		void movw(uint16_t imm, const Ref& dst);
-		void movl(uint32_t imm, const Ref& dst);
-		void movl(const SymRef& imm, const Ref& dst);
-		void movq(uint64_t imm, const Ref& dst);
+		void mov(Ref const& src, Ref const& dst);
+		void mov(SymRef const& src, RegRef const& dst);
+		void mov(RegRef const& src, SymRef const& dst);
+		void movb(uint8_t imm, Ref const& dst);
+		void movw(uint16_t imm, Ref const& dst);
+		void movl(uint32_t imm, Ref const& dst);
+		void movl(SymRef const& imm, Ref const& dst);
+		void movq(uint64_t imm, Ref const& dst);
 
 		void nop();
 
-		void pop(const RegRef& ref);
-		void popw(const MemRef& ref);
-		void popq(const MemRef& ref);
+		void pop(RegRef const& ref);
+		void popw(MemRef const& ref);
+		void popq(MemRef const& ref);
 
 		void push(uint32_t imm);
 		void pushw(uint16_t imm);
 		void pushq(uint32_t imm);
-		void push(const RegRef& ref);
-		void pushw(const MemRef& ref);
-		void pushq(const MemRef& ref);
-		void pushw(const SymRef& ref);
-		void pushq(const SymRef& ref);
+		void push(RegRef const& ref);
+		void pushw(MemRef const& ref);
+		void pushq(MemRef const& ref);
+		void pushw(SymRef const& ref);
+		void pushq(SymRef const& ref);
 
 		void ret(uint16_t imm);
 		void ret();

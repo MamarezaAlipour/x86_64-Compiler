@@ -12,7 +12,7 @@ namespace x86_64 {
 	class Function<R(Args...)> final
 	{
 	public: // methods
-		explicit Function(const ByteArray& code)
+		explicit Function(ByteArray const& code)
 			: m_code_ptr{ code.data() } ///@ hack
 			, m_code_size{ code.size() }
 		{
