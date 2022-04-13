@@ -83,7 +83,7 @@ namespace x86_64 {
 		return m_data.capacity();
 	}
 
-	void ByteArray::write(const std::string& file_name) const
+	void ByteArray::write(std::string const& file_name) const
 	{
 		std::ofstream stream(file_name, std::ios::binary);
 		write(stream);
@@ -92,7 +92,7 @@ namespace x86_64 {
 	void ByteArray::write(std::ostream& stream) const
 	{
 		stream.write(
-			reinterpret_cast<const char*>(m_data.data()),
+			reinterpret_cast<char const*>(m_data.data()),
 			static_cast<std::streamsize>(size()));
 	}
 
@@ -103,7 +103,7 @@ namespace x86_64 {
 		std::ios state(nullptr);
 		state.copyfmt(stream);
 
-		for (const uint8_t& value : array.m_data)
+		for (uint8_t const& value : array.m_data)
 		{
 			if (!first)
 				stream << " ";
