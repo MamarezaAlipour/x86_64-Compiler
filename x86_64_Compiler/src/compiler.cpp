@@ -200,8 +200,7 @@ namespace x86_64 {
 
 		bool isSymbolDefined(std::string const& name) const;
 
-		void
-			pushSymbol(std::string const& name, std::string const& base_symbol, std::size_t offset);
+		void pushSymbol(std::string const& name, std::string const& base_symbol, std::size_t offset);
 
 		void pushReloc(Reloc const& reloc);
 
@@ -261,9 +260,7 @@ namespace x86_64 {
 		}
 	}
 
-	bool detail::RegRef::operator==(detail::RegRef const& ref) const {
-		return size == ref.size && reg == ref.reg;
-	}
+	bool detail::RegRef::operator==(detail::RegRef const& ref) const { return size == ref.size && reg == ref.reg; }
 
 	bool detail::RegRef::operator!=(detail::RegRef const& ref) const { return !(*this == ref); }
 
@@ -274,9 +271,7 @@ namespace x86_64 {
 		, disp {0}
 		, disp_specified {false} {}
 
-	Compiler::MemRef Compiler::MemRef::operator-(int64_t offset) const {
-		return MemRef(*this, disp - offset);
-	}
+	Compiler::MemRef Compiler::MemRef::operator-(int64_t offset) const { return MemRef(*this, disp - offset); }
 
 	Compiler::MemRef::MemRef(const MemRef& ref, int64_t disp)
 		: scale {ref.scale}
@@ -285,9 +280,7 @@ namespace x86_64 {
 		, disp {disp}
 		, disp_specified {true} {}
 
-	Compiler::MemRef Compiler::MemRef::operator+(int64_t offset) const {
-		return MemRef(*this, disp + offset);
-	}
+	Compiler::MemRef Compiler::MemRef::operator+(int64_t offset) const { return MemRef(*this, disp + offset); }
 
 	Compiler::MemRef operator+(int64_t offset, const Compiler::MemRef& ref) { return ref + offset; }
 
@@ -330,13 +323,9 @@ namespace x86_64 {
 
 	Compiler::SymRef::~SymRef() { delete name; }
 
-	Compiler::SymRef Compiler::SymRef::operator+(int64_t offset) const {
-		return SymRef(*this, this->offset + offset);
-	}
+	Compiler::SymRef Compiler::SymRef::operator+(int64_t offset) const { return SymRef(*this, this->offset + offset); }
 
-	Compiler::SymRef Compiler::SymRef::operator-(int64_t offset) const {
-		return SymRef(*this, this->offset - offset);
-	}
+	Compiler::SymRef Compiler::SymRef::operator-(int64_t offset) const { return SymRef(*this, this->offset - offset); }
 
 	Compiler::SymRef::SymRef(SymRef const& ref, int64_t offset)
 		: type {ref.type}
@@ -415,9 +404,7 @@ namespace x86_64 {
 		return m_impl->data(name, data, size);
 	}
 
-	void Compiler::bss(std::string const& name, std::size_t size) {
-		return m_impl->bss(name, size);
-	}
+	void Compiler::bss(std::string const& name, std::size_t size) { return m_impl->bss(name, size); }
 
 	const ByteArray& Compiler::getCode() const { return m_impl->getCode(); }
 
@@ -427,9 +414,7 @@ namespace x86_64 {
 
 	Compiler::MemRef Compiler::mem(RegRef const& reg) const { return m_impl->mem(reg); }
 
-	Compiler::MemRef Compiler::mem(RegRef const& index, int8_t scale) const {
-		return m_impl->mem(index, scale);
-	}
+	Compiler::MemRef Compiler::mem(RegRef const& index, int8_t scale) const { return m_impl->mem(index, scale); }
 
 	Compiler::MemRef Compiler::mem(RegRef const& base, RegRef const& index, int8_t scale) const {
 		return m_impl->mem(base, index, scale);
@@ -439,9 +424,7 @@ namespace x86_64 {
 
 	Compiler::SymRef Compiler::rel(std::string const& name) { return m_impl->rel(name); }
 
-	void Compiler::relocate(std::string const& name, int64_t value) {
-		return m_impl->relocate(name, value);
-	}
+	void Compiler::relocate(std::string const& name, int64_t value) { return m_impl->relocate(name, value); }
 
 	void Compiler::constant(uint8_t value) { return m_impl->constant(value); }
 
@@ -491,13 +474,9 @@ namespace x86_64 {
 
 	void Compiler::enterq(uint16_t imm16, uint8_t imm8) { return m_impl->enterw(imm16, imm8); }
 
-	void Compiler::lea(MemRef const& mem_ref, RegRef const& reg_ref) {
-		return m_impl->lea(mem_ref, reg_ref);
-	}
+	void Compiler::lea(MemRef const& mem_ref, RegRef const& reg_ref) { return m_impl->lea(mem_ref, reg_ref); }
 
-	void Compiler::lea(SymRef const& sym_ref, RegRef const& reg_ref) {
-		return m_impl->lea(sym_ref, reg_ref);
-	}
+	void Compiler::lea(SymRef const& sym_ref, RegRef const& reg_ref) { return m_impl->lea(sym_ref, reg_ref); }
 
 	void Compiler::leave() { return m_impl->leave(); }
 
@@ -606,9 +585,7 @@ namespace x86_64 {
 
 	Compiler::RegRef Compiler::Impl::reg(RegRef const& reg) const { return reg; }
 
-	Compiler::MemRef Compiler::Impl::mem(int64_t disp) const {
-		return disp + MemRef(0, NOREG, NOREG);
-	}
+	Compiler::MemRef Compiler::Impl::mem(int64_t disp) const { return disp + MemRef(0, NOREG, NOREG); }
 
 	Compiler::MemRef Compiler::Impl::mem(RegRef const& reg) const { return MemRef(0, NOREG, reg); }
 
@@ -616,18 +593,13 @@ namespace x86_64 {
 		return MemRef(scale, index, NOREG);
 	}
 
-	Compiler::MemRef
-		Compiler::Impl::mem(RegRef const& base, RegRef const& index, int8_t scale) const {
+	Compiler::MemRef Compiler::Impl::mem(RegRef const& base, RegRef const& index, int8_t scale) const {
 		return MemRef(scale, index, base);
 	}
 
-	Compiler::SymRef Compiler::Impl::abs(std::string const& name) {
-		return SymRef(SymRef::Type::Abs, name);
-	}
+	Compiler::SymRef Compiler::Impl::abs(std::string const& name) { return SymRef(SymRef::Type::Abs, name); }
 
-	Compiler::SymRef Compiler::Impl::rel(std::string const& name) {
-		return SymRef(SymRef::Type::Rel, name);
-	}
+	Compiler::SymRef Compiler::Impl::rel(std::string const& name) { return SymRef(SymRef::Type::Rel, name); }
 
 	void Compiler::Impl::relocate(std::string const& name, int64_t value) {
 		for (auto& reloc : m_relocs)
@@ -700,19 +672,19 @@ namespace x86_64 {
 		gen(disp);
 	}
 
-	void Compiler::Impl::call(const Ref& ref) { callq(ref); }
+	void Compiler::Impl::call(Ref const& ref) { callq(ref); }
 
-	void Compiler::Impl::callw(const Ref& ref) { instr_no_w(0xff, 2, Size::Word, ref); }
+	void Compiler::Impl::callw(Ref const& ref) { instr_no_w(0xff, 2, Size::Word, ref); }
 
-	void Compiler::Impl::callq(const Ref& ref) { instr_no_w(0xff, 2, Size::Dword, ref); }
+	void Compiler::Impl::callq(Ref const& ref) { instr_no_w(0xff, 2, Size::Dword, ref); }
 
-	void Compiler::Impl::lcall(const Ref& ref) { lcalll(ref); }
+	void Compiler::Impl::lcall(Ref const& ref) { lcalll(ref); }
 
-	void Compiler::Impl::lcallw(const Ref& ref) { instr_no_w(0xff, 3, Size::Word, ref); }
+	void Compiler::Impl::lcallw(Ref const& ref) { instr_no_w(0xff, 3, Size::Word, ref); }
 
-	void Compiler::Impl::lcalll(const Ref& ref) { instr_no_w(0xff, 3, Size::Dword, ref); }
+	void Compiler::Impl::lcalll(Ref const& ref) { instr_no_w(0xff, 3, Size::Dword, ref); }
 
-	void Compiler::Impl::call(const SymRef& ref) {
+	void Compiler::Impl::call(SymRef const& ref) {
 		if (ref.type == SymRef::Type::Rel) {
 			call(static_cast<int32_t>(ref.offset));
 		} else {
@@ -750,8 +722,7 @@ namespace x86_64 {
 	}
 
 	void Compiler::Impl::lea(const SymRef& sym_ref, const RegRef& reg_ref) {
-		lea(MemRef(0, NOREG, sym_ref.type == SymRef::Type::Rel ? RIP : NOREG) + sym_ref.offset,
-			reg_ref);
+		lea(MemRef(0, NOREG, sym_ref.type == SymRef::Type::Rel ? RIP : NOREG) + sym_ref.offset, reg_ref);
 
 		pushReloc({sym_ref.name, sym_ref.type, static_cast<int64_t>(sectionSize(TEXT) - 4)});
 	}
@@ -766,10 +737,10 @@ namespace x86_64 {
 	void Compiler::Impl::leaveq() { genb(0xc9); }
 
 	void Compiler::Impl::mov(const Ref& src, const Ref& dst) {
-		if ((src.type == Ref::Type::Reg && src.reg.reg == 0 && dst.type == Ref::Type::Mem &&
-			 dst.mem.base == NOREG && dst.mem.index == NOREG && !isDword(dst.mem.disp)) ||
-			(dst.type == Ref::Type::Reg && dst.reg.reg == 0 && src.type == Ref::Type::Mem &&
-			 src.mem.base == NOREG && src.mem.index == NOREG && !isDword(src.mem.disp))) {
+		if ((src.type == Ref::Type::Reg && src.reg.reg == 0 && dst.type == Ref::Type::Mem && dst.mem.base == NOREG &&
+			 dst.mem.index == NOREG && !isDword(dst.mem.disp)) ||
+			(dst.type == Ref::Type::Reg && dst.reg.reg == 0 && src.type == Ref::Type::Mem && src.mem.base == NOREG &&
+			 src.mem.index == NOREG && !isDword(src.mem.disp))) {
 			instr(0xa0, dst, src);
 		} else {
 			instr(0x88, src, dst);
@@ -973,10 +944,7 @@ namespace x86_64 {
 		}
 	}
 
-	void Compiler::Impl::genREXPrefix(const int8_t& reg,
-									  Size size,
-									  const int8_t& index,
-									  const int8_t& base) {
+	void Compiler::Impl::genREXPrefix(const int8_t& reg, Size size, const int8_t& index, const int8_t& base) {
 		uint8_t rex = c_rex_field_w * (size == Size::Qword) + c_rex_field_b * (base > c_x86_mask) +
 			c_rex_field_x * (index > c_x86_mask) + c_rex_field_r * (reg > c_x86_mask);
 
@@ -1006,8 +974,7 @@ namespace x86_64 {
 		uint8_t mod;
 		uint8_t rm = mem_ref.base.reg & c_x86_mask;
 
-		if ((mem_ref.disp == 0 && (mem_ref.base.reg & c_x86_mask) != 5) ||
-			(mem_ref.scale && mem_ref.base == NOREG)) {
+		if ((mem_ref.disp == 0 && (mem_ref.base.reg & c_x86_mask) != 5) || (mem_ref.scale && mem_ref.base == NOREG)) {
 			mod = c_mod_disp0;
 		} else if (isByte(mem_ref.disp)) {
 			mod = c_mod_disp8;
@@ -1087,8 +1054,7 @@ namespace x86_64 {
 				"", "TEXT", "DATA", "BSS", "RDATA", "EDATA", "IDATA", "RELOC",
 			};
 
-			throw std::runtime_error("section " + std::string(section_names[id]) +
-									 " is not defined");
+			throw std::runtime_error("section " + std::string(section_names[id]) + " is not defined");
 		}
 
 		return m_sections.at(id);
@@ -1096,9 +1062,7 @@ namespace x86_64 {
 
 	ByteArray& Compiler::Impl::section(SectionID id) { return m_sections[id]; }
 
-	bool Compiler::Impl::isSectionDefined(SectionID id) const {
-		return m_sections.find(id) != m_sections.end();
-	}
+	bool Compiler::Impl::isSectionDefined(SectionID id) const { return m_sections.find(id) != m_sections.end(); }
 
 	std::size_t Compiler::Impl::sectionSize(SectionID id) const {
 		return isSectionDefined(id) ? section(id).size() : 0;
@@ -1108,17 +1072,13 @@ namespace x86_64 {
 		return m_symbols.find(name) != m_symbols.end();
 	}
 
-	void Compiler::Impl::pushSymbol(const std::string& name,
-									const std::string& base_symbol,
-									std::size_t offset) {
+	void Compiler::Impl::pushSymbol(const std::string& name, const std::string& base_symbol, std::size_t offset) {
 		if (isSymbolDefined(name))
 			throw std::runtime_error("symbol '" + name + "' is already defined");
 
 		m_symbols[name] = Symbol {base_symbol, offset};
 	}
 
-	void Compiler::Impl::pushReloc(const Compiler::Impl::Reloc& reloc) {
-		m_relocs.emplace_back(reloc);
-	}
+	void Compiler::Impl::pushReloc(const Compiler::Impl::Reloc& reloc) { m_relocs.emplace_back(reloc); }
 
 } // namespace x86_64
