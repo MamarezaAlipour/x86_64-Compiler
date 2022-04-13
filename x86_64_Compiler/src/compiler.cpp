@@ -500,7 +500,7 @@ namespace x86_64 {
 		return m_impl->data(name, data, size);
 	}
 
-	void Compiler::bss(const std::string& name, std::size_t size)
+	void Compiler::bss(std::string const& name, std::size_t size)
 	{
 		return m_impl->bss(name, size);
 	}
@@ -510,7 +510,7 @@ namespace x86_64 {
 		return m_impl->getCode();
 	}
 
-	Compiler::RegRef Compiler::reg(const RegRef& reg) const
+	Compiler::RegRef Compiler::reg(RegRef const& reg) const
 	{
 		return m_impl->reg(reg);
 	}
@@ -520,35 +520,35 @@ namespace x86_64 {
 		return m_impl->mem(disp);
 	}
 
-	Compiler::MemRef Compiler::mem(const RegRef& reg) const
+	Compiler::MemRef Compiler::mem(RegRef const& reg) const
 	{
 		return m_impl->mem(reg);
 	}
 
-	Compiler::MemRef Compiler::mem(const RegRef& index, int8_t scale) const
+	Compiler::MemRef Compiler::mem(RegRef const& index, int8_t scale) const
 	{
 		return m_impl->mem(index, scale);
 	}
 
 	Compiler::MemRef Compiler::mem(
-		const RegRef& base,
-		const RegRef& index,
+		RegRef const& base,
+		RegRef const& index,
 		int8_t scale) const
 	{
 		return m_impl->mem(base, index, scale);
 	}
 
-	Compiler::SymRef Compiler::abs(const std::string& name)
+	Compiler::SymRef Compiler::abs(std::string const& name)
 	{
 		return m_impl->abs(name);
 	}
 
-	Compiler::SymRef Compiler::rel(const std::string& name)
+	Compiler::SymRef Compiler::rel(std::string const& name)
 	{
 		return m_impl->rel(name);
 	}
 
-	void Compiler::relocate(const std::string& name, int64_t value)
+	void Compiler::relocate(std::string const& name, int64_t value)
 	{
 		return m_impl->relocate(name, value);
 	}
@@ -578,27 +578,27 @@ namespace x86_64 {
 		return m_impl->constant(value);
 	}
 
-	void Compiler::add(const Ref& src, const Ref& dst)
+	void Compiler::add(Ref const& src, Ref const& dst)
 	{
 		return m_impl->add(src, dst);
 	}
 
-	void Compiler::addb(uint8_t imm, const Ref& dst)
+	void Compiler::addb(uint8_t imm, Ref const& dst)
 	{
 		return m_impl->addb(imm, dst);
 	}
 
-	void Compiler::addw(uint16_t imm, const Ref& dst)
+	void Compiler::addw(uint16_t imm, Ref const& dst)
 	{
 		return m_impl->addw(imm, dst);
 	}
 
-	void Compiler::addl(uint32_t imm, const Ref& dst)
+	void Compiler::addl(uint32_t imm, Ref const& dst)
 	{
 		return m_impl->addl(imm, dst);
 	}
 
-	void Compiler::addq(uint64_t imm, const Ref& dst)
+	void Compiler::addq(uint64_t imm, Ref const& dst)
 	{
 		return m_impl->addq(imm, dst);
 	}
@@ -618,42 +618,42 @@ namespace x86_64 {
 		return m_impl->callq(disp);
 	}
 
-	void Compiler::call(const Ref& ref)
+	void Compiler::call(Ref const& ref)
 	{
 		return m_impl->call(ref);
 	}
 
-	void Compiler::callw(const Ref& ref)
+	void Compiler::callw(Ref const& ref)
 	{
 		return m_impl->callw(ref);
 	}
 
-	void Compiler::callq(const Ref& ref)
+	void Compiler::callq(Ref const& ref)
 	{
 		return m_impl->callq(ref);
 	}
 
-	void Compiler::lcall(const Ref& ref)
+	void Compiler::lcall(Ref const& ref)
 	{
 		return m_impl->lcall(ref);
 	}
 
-	void Compiler::lcallw(const Ref& ref)
+	void Compiler::lcallw(Ref const& ref)
 	{
 		return m_impl->lcallw(ref);
 	}
 
-	void Compiler::lcalll(const Ref& ref)
+	void Compiler::lcalll(Ref const& ref)
 	{
 		return m_impl->lcalll(ref);
 	}
 
-	void Compiler::call(const SymRef& ref)
+	void Compiler::call(SymRef const& ref)
 	{
 		return m_impl->call(ref);
 	}
 
-	void Compiler::lcall(const SymRef& ref)
+	void Compiler::lcall(SymRef const& ref)
 	{
 		return m_impl->lcall(ref);
 	}
@@ -673,12 +673,12 @@ namespace x86_64 {
 		return m_impl->enterw(imm16, imm8);
 	}
 
-	void Compiler::lea(const MemRef& mem_ref, const RegRef& reg_ref)
+	void Compiler::lea(MemRef const& mem_ref, RegRef const& reg_ref)
 	{
 		return m_impl->lea(mem_ref, reg_ref);
 	}
 
-	void Compiler::lea(const SymRef& sym_ref, const RegRef& reg_ref)
+	void Compiler::lea(SymRef const& sym_ref, RegRef const& reg_ref)
 	{
 		return m_impl->lea(sym_ref, reg_ref);
 	}
@@ -698,42 +698,42 @@ namespace x86_64 {
 		return m_impl->leaveq();
 	}
 
-	void Compiler::mov(const Ref& src, const Ref& dst)
+	void Compiler::mov(Ref const& src, Ref const& dst)
 	{
 		return m_impl->mov(src, dst);
 	}
 
-	void Compiler::mov(const SymRef& src, const RegRef& dst)
+	void Compiler::mov(SymRef const& src, RegRef const& dst)
 	{
 		return m_impl->mov(src, dst);
 	}
 
-	void Compiler::mov(const RegRef& src, const SymRef& dst)
+	void Compiler::mov(RegRef const& src, SymRef const& dst)
 	{
 		return m_impl->mov(src, dst);
 	}
 
-	void Compiler::movb(uint8_t imm, const Ref& dst)
+	void Compiler::movb(uint8_t imm, Ref const& dst)
 	{
 		return m_impl->movb(imm, dst);
 	}
 
-	void Compiler::movw(uint16_t imm, const Ref& dst)
+	void Compiler::movw(uint16_t imm, Ref const& dst)
 	{
 		return m_impl->movw(imm, dst);
 	}
 
-	void Compiler::movl(uint32_t imm, const Ref& dst)
+	void Compiler::movl(uint32_t imm, Ref const& dst)
 	{
 		return m_impl->movl(imm, dst);
 	}
 
-	void Compiler::movl(const SymRef& imm, const Ref& dst)
+	void Compiler::movl(SymRef const& imm, Ref const& dst)
 	{
 		return m_impl->movl(imm, dst);
 	}
 
-	void Compiler::movq(uint64_t imm, const Ref& dst)
+	void Compiler::movq(uint64_t imm, Ref const& dst)
 	{
 		return m_impl->movq(imm, dst);
 	}
@@ -743,17 +743,17 @@ namespace x86_64 {
 		return m_impl->nop();
 	}
 
-	void Compiler::pop(const RegRef& ref)
+	void Compiler::pop(RegRef const& ref)
 	{
 		return m_impl->pop(ref);
 	}
 
-	void Compiler::popw(const MemRef& ref)
+	void Compiler::popw(MemRef const& ref)
 	{
 		return m_impl->popw(ref);
 	}
 
-	void Compiler::popq(const MemRef& ref)
+	void Compiler::popq(MemRef const& ref)
 	{
 		return m_impl->popq(ref);
 	}
@@ -773,27 +773,27 @@ namespace x86_64 {
 		return m_impl->pushq(imm);
 	}
 
-	void Compiler::push(const RegRef& ref)
+	void Compiler::push(RegRef const& ref)
 	{
 		return m_impl->push(ref);
 	}
 
-	void Compiler::pushw(const MemRef& ref)
+	void Compiler::pushw(MemRef const& ref)
 	{
 		return m_impl->pushw(ref);
 	}
 
-	void Compiler::pushq(const MemRef& ref)
+	void Compiler::pushq(MemRef const& ref)
 	{
 		return m_impl->pushq(ref);
 	}
 
-	void Compiler::pushw(const SymRef& ref)
+	void Compiler::pushw(SymRef const& ref)
 	{
 		return m_impl->pushw(ref);
 	}
 
-	void Compiler::pushq(const SymRef& ref)
+	void Compiler::pushq(SymRef const& ref)
 	{
 		return m_impl->pushq(ref);
 	}
@@ -818,27 +818,27 @@ namespace x86_64 {
 		return m_impl->lret();
 	}
 
-	void Compiler::sub(const Ref& src, const Ref& dst)
+	void Compiler::sub(Ref const& src, Ref const& dst)
 	{
 		return m_impl->sub(src, dst);
 	}
 
-	void Compiler::subb(uint8_t imm, const Ref& dst)
+	void Compiler::subb(uint8_t imm, Ref const& dst)
 	{
 		return m_impl->subb(imm, dst);
 	}
 
-	void Compiler::subw(uint16_t imm, const Ref& dst)
+	void Compiler::subw(uint16_t imm, Ref const& dst)
 	{
 		return m_impl->subw(imm, dst);
 	}
 
-	void Compiler::subl(uint32_t imm, const Ref& dst)
+	void Compiler::subl(uint32_t imm, Ref const& dst)
 	{
 		return m_impl->subl(imm, dst);
 	}
 
-	void Compiler::subq(uint64_t imm, const Ref& dst)
+	void Compiler::subq(uint64_t imm, Ref const& dst)
 	{
 		return m_impl->subq(imm, dst);
 	}
@@ -874,8 +874,8 @@ namespace x86_64 {
 	}
 
 	void Compiler::Impl::rdata(
-		const std::string& name,
-		const uint8_t* data,
+		std::string const& name,
+		uint8_t const* data,
 		std::size_t size)
 	{
 		std::size_t offset = section(RDATA).size();
@@ -884,8 +884,8 @@ namespace x86_64 {
 	}
 
 	void Compiler::Impl::data(
-		const std::string& name,
-		const uint8_t* data,
+		std::string const& name,
+		uint8_t const* data,
 		std::size_t size)
 	{
 		std::size_t offset = section(DATA).size();
@@ -893,7 +893,7 @@ namespace x86_64 {
 		pushSymbol(name, ".data", offset);
 	}
 
-	void Compiler::Impl::bss(const std::string& name, std::size_t size)
+	void Compiler::Impl::bss(std::string const& name, std::size_t size)
 	{
 		std::size_t offset = section(BSS).size();
 		section(BSS).push(nullptr, size);
@@ -905,7 +905,7 @@ namespace x86_64 {
 		return section(TEXT);
 	}
 
-	Compiler::RegRef Compiler::Impl::reg(const RegRef& reg) const
+	Compiler::RegRef Compiler::Impl::reg(RegRef const& reg) const
 	{
 		return reg;
 	}
@@ -915,35 +915,35 @@ namespace x86_64 {
 		return disp + MemRef(0, NOREG, NOREG);
 	}
 
-	Compiler::MemRef Compiler::Impl::mem(const RegRef& reg) const
+	Compiler::MemRef Compiler::Impl::mem(RegRef const& reg) const
 	{
 		return MemRef(0, NOREG, reg);
 	}
 
-	Compiler::MemRef Compiler::Impl::mem(const RegRef& index, int8_t scale) const
+	Compiler::MemRef Compiler::Impl::mem(RegRef const& index, int8_t scale) const
 	{
 		return MemRef(scale, index, NOREG);
 	}
 
 	Compiler::MemRef Compiler::Impl::mem(
-		const RegRef& base,
-		const RegRef& index,
+		RegRef const& base,
+		RegRef const& index,
 		int8_t scale) const
 	{
 		return MemRef(scale, index, base);
 	}
 
-	Compiler::SymRef Compiler::Impl::abs(const std::string& name)
+	Compiler::SymRef Compiler::Impl::abs(std::string const& name)
 	{
 		return SymRef(SymRef::Type::Abs, name);
 	}
 
-	Compiler::SymRef Compiler::Impl::rel(const std::string& name)
+	Compiler::SymRef Compiler::Impl::rel(std::string const& name)
 	{
 		return SymRef(SymRef::Type::Rel, name);
 	}
 
-	void Compiler::Impl::relocate(const std::string& name, int64_t value)
+	void Compiler::Impl::relocate(std::string const& name, int64_t value)
 	{
 		for (auto& reloc : m_relocs)
 			if (reloc.name == name)
@@ -984,32 +984,32 @@ namespace x86_64 {
 		gen(value);
 	}
 
-	void Compiler::Impl::add(const Ref& src, const Ref& dst)
+	void Compiler::Impl::add(Ref const& src, Ref const& dst)
 	{
 		instr(0x00, src, dst);
 	}
 
-	void Compiler::Impl::addb(uint8_t imm, const Ref& dst)
+	void Compiler::Impl::addb(uint8_t imm, Ref const& dst)
 	{
 		add(imm, dst);
 	}
 
-	void Compiler::Impl::addw(uint16_t imm, const Ref& dst)
+	void Compiler::Impl::addw(uint16_t imm, Ref const& dst)
 	{
 		add(imm, dst);
 	}
 
-	void Compiler::Impl::addl(uint32_t imm, const Ref& dst)
+	void Compiler::Impl::addl(uint32_t imm, Ref const& dst)
 	{
 		add(imm, dst);
 	}
 
-	void Compiler::Impl::addq(uint64_t imm, const Ref& dst)
+	void Compiler::Impl::addq(uint64_t imm, Ref const& dst)
 	{
 		add(imm, dst);
 	}
 
-	void Compiler::Impl::add(const Imm& imm, const Ref& dst)
+	void Compiler::Impl::add(Imm const& imm, Ref const& dst)
 	{
 		if (dst.type == Ref::Type::Reg && dst.reg.reg == 0)
 		{
