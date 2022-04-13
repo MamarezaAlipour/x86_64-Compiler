@@ -9,28 +9,22 @@ namespace x86_64 {
 	class Function;
 
 	template <class R, class... Args>
-	class Function<R(Args...)> final
-	{
-	public: // methods
+	class Function<R(Args...)> final {
+	  public: // methods
 		explicit Function(ByteArray const& code)
-			: m_code_ptr{ code.data() } ///@ hack
-			, m_code_size{ code.size() }
-		{
-		}
+			: m_code_ptr {code.data()} ///@ hack
+			, m_code_size {code.size()} {}
 
 		explicit Function(Function&& f)
-			: m_code_ptr{ nullptr }
-		{
+			: m_code_ptr {nullptr} {
 			*this = std::move(f);
 		}
 
-		~Function()
-		{
+		~Function() {
 			// free(m_code_ptr);
 		}
 
-		Function& operator=(Function&& f)
-		{
+		Function& operator=(Function&& f) {
 			// free(m_code_ptr);
 
 			m_code_ptr = f.m_code_ptr;
@@ -42,14 +36,13 @@ namespace x86_64 {
 			return *this;
 		}
 
-		R operator()(Args &&... args) const
-		{
-			using FuncPtrType = R(*)(Args...);
+		R operator()(Args&&... args) const {
+			using FuncPtrType = R (*)(Args...);
 			FuncPtrType f_ptr = reinterpret_cast<FuncPtrType>(m_code_ptr);
 			return f_ptr(std::forward<Args>(args)...);
 		}
 
-	private: // fields
+	  private: // fields
 		const void* m_code_ptr;
 		size_t m_code_size;
 	};

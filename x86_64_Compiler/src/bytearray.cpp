@@ -5,38 +5,29 @@
 
 namespace x86_64 {
 
-	ByteArray::ByteArray()
-	{
+	ByteArray::ByteArray() {
 		///@ hack to avoid relocation
 		m_data.reserve(0x1000);
 	}
 
 	ByteArray::ByteArray(ByteArray const& array)
-		: m_data{ array.m_data }
-	{
-	}
+		: m_data {array.m_data} {}
 
 	ByteArray::ByteArray(ByteArray&& array)
-		: m_data{ std::move(array.m_data) }
-	{
-	}
+		: m_data {std::move(array.m_data)} {}
 
-	ByteArray& ByteArray::operator=(ByteArray const& array)
-	{
+	ByteArray& ByteArray::operator=(ByteArray const& array) {
 		m_data = array.m_data;
 		return *this;
 	}
 
-	ByteArray& ByteArray::operator=(ByteArray&& array)
-	{
+	ByteArray& ByteArray::operator=(ByteArray&& array) {
 		m_data = std::move(array.m_data);
 		return *this;
 	}
 
-	uint8_t* ByteArray::push(uint8_t const* data, std::size_t size)
-	{
-		if (size > 0)
-		{
+	uint8_t* ByteArray::push(uint8_t const* data, std::size_t size) {
+		if (size > 0) {
 			if (data)
 				m_data.insert(m_data.end(), data, data + size);
 			else
@@ -46,71 +37,46 @@ namespace x86_64 {
 		return back(size);
 	}
 
-	void ByteArray::pop(std::size_t size)
-	{
-		m_data.erase(
-			m_data.end() - static_cast<int32_t>(std::min(size, m_data.size())),
-			m_data.end());
+	void ByteArray::pop(std::size_t size) {
+		m_data.erase(m_data.end() - static_cast<int32_t>(std::min(size, m_data.size())),
+					 m_data.end());
 	}
 
-	uint8_t ByteArray::operator[](std::size_t index) const
-	{
-		return m_data[index];
-	}
+	uint8_t ByteArray::operator[](std::size_t index) const { return m_data[index]; }
 
-	uint8_t& ByteArray::operator[](std::size_t index)
-	{
-		return m_data[index];
-	}
+	uint8_t& ByteArray::operator[](std::size_t index) { return m_data[index]; }
 
-	const uint8_t* ByteArray::data() const
-	{
-		return m_data.data();
-	}
+	const uint8_t* ByteArray::data() const { return m_data.data(); }
 
-	uint8_t* ByteArray::data()
-	{
-		return m_data.data();
-	}
+	uint8_t* ByteArray::data() { return m_data.data(); }
 
-	std::size_t ByteArray::size() const
-	{
-		return m_data.size();
-	}
+	std::size_t ByteArray::size() const { return m_data.size(); }
 
-	std::size_t ByteArray::capacity() const
-	{
-		return m_data.capacity();
-	}
+	std::size_t ByteArray::capacity() const { return m_data.capacity(); }
 
-	void ByteArray::write(std::string const& file_name) const
-	{
+	void ByteArray::write(std::string const& file_name) const {
 		std::ofstream stream(file_name, std::ios::binary);
 		write(stream);
 	}
 
-	void ByteArray::write(std::ostream& stream) const
-	{
-		stream.write(
-			reinterpret_cast<char const*>(m_data.data()),
-			static_cast<std::streamsize>(size()));
+	void ByteArray::write(std::ostream& stream) const {
+		stream.write(reinterpret_cast<char const*>(m_data.data()),
+					 static_cast<std::streamsize>(size()));
 	}
 
-	std::ostream& operator<<(std::ostream& stream, const ByteArray& array)
-	{
+	std::ostream& operator<<(std::ostream& stream, const ByteArray& array) {
 		bool first = true;
 
 		std::ios state(nullptr);
 		state.copyfmt(stream);
 
-		for (uint8_t const& value : array.m_data)
-		{
+		for (uint8_t const& value : array.m_data) {
 			if (!first)
 				stream << " ";
 
 			first = false;
 
-			stream << std::setfill('0') << std::setw(2) << std::hex << int{ value };
+			stream << std::setfill('0') << std::setw(2) << std::hex << int {value};
 		}
 
 		stream.copyfmt(state);
@@ -118,9 +84,6 @@ namespace x86_64 {
 		return stream;
 	}
 
-	uint8_t* ByteArray::back(std::size_t size)
-	{
-		return data() + this->size() - size;
-	}
+	uint8_t* ByteArray::back(std::size_t size) { return data() + this->size() - size; }
 
 } // namespace x86_64

@@ -13,8 +13,7 @@ namespace x86_64 {
 
 		constexpr int8_t NOREG = -1;
 
-		enum class Size
-		{
+		enum class Size {
 			None,
 			Byte,
 			Word,
@@ -22,8 +21,7 @@ namespace x86_64 {
 			Qword,
 		};
 
-		enum ByteReg
-		{
+		enum ByteReg {
 			AL,
 			CL,
 			DL,
@@ -34,8 +32,7 @@ namespace x86_64 {
 			BH,
 		};
 
-		enum WordReg
-		{
+		enum WordReg {
 			AX,
 			CX,
 			DX,
@@ -46,8 +43,7 @@ namespace x86_64 {
 			DI,
 		};
 
-		enum DwordReg
-		{
+		enum DwordReg {
 			EAX,
 			ECX,
 			EDX,
@@ -58,8 +54,7 @@ namespace x86_64 {
 			EDI,
 		};
 
-		enum QwordReg
-		{
+		enum QwordReg {
 			RAX,
 			RCX,
 			RDX,
@@ -79,43 +74,32 @@ namespace x86_64 {
 			RIP,
 		};
 
-		struct RegRef
-		{
-		public: // methods
+		struct RegRef {
+		  public: // methods
 			constexpr RegRef()
-				: size{ Size::None }
-				, reg{ NOREG }
-			{
-			}
+				: size {Size::None}
+				, reg {NOREG} {}
 
 			constexpr RegRef(ByteReg reg)
-				: size{ Size::Byte }
-				, reg{ static_cast<int8_t>(reg) }
-			{
-			}
+				: size {Size::Byte}
+				, reg {static_cast<int8_t>(reg)} {}
 
 			constexpr RegRef(WordReg reg)
-				: size{ Size::Word }
-				, reg{ static_cast<int8_t>(reg) }
-			{
-			}
+				: size {Size::Word}
+				, reg {static_cast<int8_t>(reg)} {}
 
 			constexpr RegRef(DwordReg reg)
-				: size{ Size::Dword }
-				, reg{ static_cast<int8_t>(reg) }
-			{
-			}
+				: size {Size::Dword}
+				, reg {static_cast<int8_t>(reg)} {}
 
 			constexpr RegRef(QwordReg reg)
-				: size{ Size::Qword }
-				, reg{ static_cast<int8_t>(reg) }
-			{
-			}
+				: size {Size::Qword}
+				, reg {static_cast<int8_t>(reg)} {}
 
 			bool operator==(RegRef const& ref) const;
 			bool operator!=(RegRef const& ref) const;
 
-		public: // fields
+		  public: // fields
 			Size size;
 			int8_t reg;
 		};
@@ -169,23 +153,21 @@ namespace x86_64 {
 	constexpr detail::RegRef R15(detail::R15);
 	constexpr detail::RegRef RIP(detail::RIP);
 
-	class Compiler final
-	{
-	public: // types
+	class Compiler final {
+	  public: // types
 		using RegRef = detail::RegRef;
 
-		struct MemRef
-		{
-		public: // methods
+		struct MemRef {
+		  public: // methods
 			MemRef(int8_t scale, RegRef const& index, RegRef const& base);
 
 			MemRef operator+(int64_t offset) const;
 			MemRef operator-(int64_t offset) const;
 
-		private: // methods
+		  private: // methods
 			MemRef(MemRef const& ref, int64_t disp);
 
-		public: // fields
+		  public: // fields
 			int8_t scale;
 			RegRef index;
 			RegRef base;
@@ -195,16 +177,14 @@ namespace x86_64 {
 
 		friend MemRef operator+(int64_t offset, MemRef const& ref);
 
-		struct SymRef
-		{
-		public: // types
-			enum class Type
-			{
+		struct SymRef {
+		  public: // types
+			enum class Type {
 				Abs,
 				Rel,
 			};
 
-		public: // methods
+		  public: // methods
 			SymRef(Type type, std::string const& name);
 			SymRef(SymRef const& ref);
 			SymRef(SymRef&& ref);
@@ -217,10 +197,10 @@ namespace x86_64 {
 			SymRef operator+(int64_t offset) const;
 			SymRef operator-(int64_t offset) const;
 
-		private: // methods
+		  private: // methods
 			SymRef(const SymRef& ref, int64_t offset);
 
-		public: // fields
+		  public: // fields
 			Type type;
 			const char* name;
 			int64_t offset;
@@ -228,16 +208,14 @@ namespace x86_64 {
 
 		friend SymRef operator+(int64_t offset, SymRef const& ref);
 
-		struct Ref
-		{
-		public: // types
-			enum class Type
-			{
+		struct Ref {
+		  public: // types
+			enum class Type {
 				Reg,
 				Mem,
 			};
 
-		public: // methods
+		  public: // methods
 			Ref(RegRef const& ref);
 			Ref(MemRef const& ref);
 			Ref(Ref const& ref);
@@ -248,11 +226,10 @@ namespace x86_64 {
 
 			Ref operator+(int64_t offset) const;
 
-		public: // fields
+		  public: // fields
 			Type type;
 
-			union
-			{
+			union {
 				RegRef reg;
 				MemRef mem;
 			};
@@ -260,7 +237,7 @@ namespace x86_64 {
 
 		friend Ref operator+(int64_t offset, Ref const& ref);
 
-	public: // methods
+	  public: // methods
 		Compiler();
 		~Compiler();
 
@@ -362,34 +339,30 @@ namespace x86_64 {
 		void subl(uint32_t imm, Ref const& dst);
 		void subq(uint64_t imm, Ref const& dst);
 
-	private: // types
+	  private: // types
 		class Impl;
 
-	private: // fields
+	  private: // fields
 		std::unique_ptr<Impl> m_impl;
 	};
 
 	template <class T>
-	void Compiler::rdata(std::string const& name, T value)
-	{
+	void Compiler::rdata(std::string const& name, T value) {
 		rdata(name, reinterpret_cast<const uint8_t*>(&value), sizeof(value));
 	}
 
 	template <>
-	inline void Compiler::rdata(std::string const& name, char const* value)
-	{
+	inline void Compiler::rdata(std::string const& name, char const* value) {
 		rdata(name, reinterpret_cast<const uint8_t*>(&value), strlen(value));
 	}
 
 	template <class T>
-	void Compiler::data(std::string const& name, T value)
-	{
+	void Compiler::data(std::string const& name, T value) {
 		data(name, reinterpret_cast<uint8_t const*>(&value), sizeof(value));
 	}
 
 	template <>
-	inline void Compiler::data(std::string const& name, char const* value)
-	{
+	inline void Compiler::data(std::string const& name, char const* value) {
 		data(name, reinterpret_cast<uint8_t const*>(&value), strlen(value));
 	}
 
