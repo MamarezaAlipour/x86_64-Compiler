@@ -164,38 +164,38 @@ namespace x86_64 {
 		void lret(uint16_t imm);
 		void lret();
 
-		void sub(const Ref& src, const Ref& dst);
-		void subb(uint8_t imm, const Ref& dst);
-		void subw(uint16_t imm, const Ref& dst);
-		void subl(uint32_t imm, const Ref& dst);
-		void subq(uint64_t imm, const Ref& dst);
+		void sub(const Ref& src, Ref const& dst);
+		void subb(uint8_t imm, Ref const& dst);
+		void subw(uint16_t imm, Ref const& dst);
+		void subl(uint32_t imm, Ref const& dst);
+		void subq(uint64_t imm, Ref const& dst);
 
 	private: // methods
-		void add(const Imm& imm, const Ref& dst);
-		void mov(const Imm& imm, const Ref& dst);
-		void push(const Imm& imm);
-		void sub(const Imm& imm, const Ref& dst);
+		void add(Imm const& imm, Ref const& dst);
+		void mov(Imm const& imm, Ref const& dst);
+		void push(Imm const& imm);
+		void sub(Imm const& imm, Ref const& dst);
 
-		void instr(uint8_t opcode, const Ref& op1, const Ref& dst);
-		void instr(uint8_t opcode, int8_t reg, Size size, const Ref& rm_ref);
-		void instr_no_w(uint8_t opcode, int8_t reg, Size size, const Ref& rm_ref);
-		void instr(uint8_t opcode, int8_t ext, const Imm& imm, const Ref& dst);
+		void instr(uint8_t opcode, Ref const& op1, Ref const& dst);
+		void instr(uint8_t opcode, int8_t reg, Size size, Ref const& rm_ref);
+		void instr_no_w(uint8_t opcode, int8_t reg, Size size, Ref const& rm_ref);
+		void instr(uint8_t opcode, int8_t ext, Imm const& imm, Ref const& dst);
 
 		void genREXPrefix(
-			const int8_t& reg,
+			int8_t const& reg,
 			Size size,
-			const int8_t& index,
-			const int8_t& base);
+			int8_t const& index,
+			int8_t const& base);
 
-		void genRef(int8_t reg, const Ref& ref);
-		void genRef(int8_t reg, const RegRef& reg_ref);
-		void genRef(int8_t reg, const MemRef& mem_ref);
-		void genSIB(const MemRef& mem_ref);
+		void genRef(int8_t reg, Ref const& ref);
+		void genRef(int8_t reg, RegRef const& reg_ref);
+		void genRef(int8_t reg, MemRef const& mem_ref);
+		void genSIB(MemRef const& mem_ref);
 
 		void genCompositeByte(uint8_t a, uint8_t b, uint8_t c);
 
 		template <class T>
-		void gen(const T& value);
+		void gen(T const& value);
 
 		void genb(uint8_t);
 		void genw(uint16_t);
@@ -208,14 +208,14 @@ namespace x86_64 {
 		bool isSectionDefined(SectionID id) const;
 		std::size_t sectionSize(SectionID id) const;
 
-		bool isSymbolDefined(const std::string& name) const;
+		bool isSymbolDefined(std::string const& name) const;
 
 		void pushSymbol(
-			const std::string& name,
-			const std::string& base_symbol,
+			std::string const& name,
+			std::string const& base_symbol,
 			std::size_t offset);
 
-		void pushReloc(const Reloc& reloc);
+		void pushReloc(Reloc const& reloc);
 
 	public:
 		template <class T>
@@ -253,13 +253,13 @@ namespace x86_64 {
 	};
 
 	template <class T>
-	void Compiler::Impl::gen(const T& value)
+	void Compiler::Impl::gen(T const& value)
 	{
 		section(TEXT).push(value);
 	}
 
 	template <>
-	inline void Compiler::Impl::gen(const Imm& imm)
+	inline void Compiler::Impl::gen(Imm const& imm)
 	{
 		switch (imm.size)
 		{
@@ -284,17 +284,17 @@ namespace x86_64 {
 		}
 	}
 
-	bool detail::RegRef::operator==(const detail::RegRef& ref) const
+	bool detail::RegRef::operator==(detail::RegRef const& ref) const
 	{
 		return size == ref.size && reg == ref.reg;
 	}
 
-	bool detail::RegRef::operator!=(const detail::RegRef& ref) const
+	bool detail::RegRef::operator!=(detail::RegRef const& ref) const
 	{
 		return !(*this == ref);
 	}
 
-	Compiler::MemRef::MemRef(int8_t scale, const RegRef& index, const RegRef& base)
+	Compiler::MemRef::MemRef(int8_t scale, RegRef const& index, RegRef const& base)
 		: scale{ scale }
 		, index{ index }
 		, base{ base }
@@ -327,14 +327,14 @@ namespace x86_64 {
 		return ref + offset;
 	}
 
-	Compiler::SymRef::SymRef(Type type, const std::string& name)
+	Compiler::SymRef::SymRef(Type type, std::string const& name)
 		: type{ type }
 		, name{ strdup(name.c_str()) }
 		, offset{ 0 }
 	{
 	}
 
-	Compiler::SymRef::SymRef(const SymRef& ref)
+	Compiler::SymRef::SymRef(SymRef const& ref)
 		: name{ nullptr }
 	{
 		*this = ref;
@@ -346,7 +346,7 @@ namespace x86_64 {
 		*this = std::move(ref);
 	}
 
-	Compiler::SymRef& Compiler::SymRef::operator=(const SymRef& ref)
+	Compiler::SymRef& Compiler::SymRef::operator=(SymRef const& ref)
 	{
 		delete name;
 
@@ -385,7 +385,7 @@ namespace x86_64 {
 		return SymRef(*this, this->offset - offset);
 	}
 
-	Compiler::SymRef::SymRef(const SymRef& ref, int64_t offset)
+	Compiler::SymRef::SymRef(SymRef const& ref, int64_t offset)
 		: type{ ref.type }
 		, name{ strdup(ref.name) }
 		, offset{ offset }
@@ -397,19 +397,19 @@ namespace x86_64 {
 		return ref + offset;
 	}
 
-	Compiler::Ref::Ref(const RegRef& ref)
+	Compiler::Ref::Ref(RegRef const& ref)
 		: type{ Type::Reg }
 		, reg{ ref }
 	{
 	}
 
-	Compiler::Ref::Ref(const MemRef& ref)
+	Compiler::Ref::Ref(MemRef const& ref)
 		: type{ Type::Mem }
 		, mem{ ref }
 	{
 	}
 
-	Compiler::Ref::Ref(const Ref& ref)
+	Compiler::Ref::Ref(Ref const& ref)
 	{
 		*this = ref;
 	}
@@ -419,7 +419,7 @@ namespace x86_64 {
 		*this = std::move(ref);
 	}
 
-	Compiler::Ref& Compiler::Ref::operator=(const Ref& ref)
+	Compiler::Ref& Compiler::Ref::operator=(Ref const& ref)
 	{
 		type = ref.type;
 
@@ -465,7 +465,7 @@ namespace x86_64 {
 		return ref;
 	}
 
-	Compiler::Ref operator+(int64_t offset, const Compiler::Ref& ref)
+	Compiler::Ref operator+(int64_t offset, Compiler::Ref const& ref)
 	{
 		return ref + offset;
 	}
@@ -485,8 +485,8 @@ namespace x86_64 {
 	}
 
 	void Compiler::rdata(
-		const std::string& name,
-		const uint8_t* data,
+		std::string const& name,
+		uint8_t const* data,
 		std::size_t size)
 	{
 		return m_impl->rdata(name, data, size);
