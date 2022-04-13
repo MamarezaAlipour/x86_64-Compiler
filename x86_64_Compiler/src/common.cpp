@@ -8,7 +8,7 @@
 
 namespace x86_64 {
 
-	void* allocateExecutableMemory(const void* code_ptr, size_t code_size)
+	void* allocateExecutableMemory(void const* code_ptr, size_t code_size)
 	{
 		long page_size = sysconf(_SC_PAGE_SIZE);
 		if (page_size == -1)

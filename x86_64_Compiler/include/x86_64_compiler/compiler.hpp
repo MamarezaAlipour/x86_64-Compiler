@@ -112,8 +112,8 @@ namespace x86_64 {
 			{
 			}
 
-			bool operator==(const RegRef& ref) const;
-			bool operator!=(const RegRef& ref) const;
+			bool operator==(RegRef const& ref) const;
+			bool operator!=(RegRef const& ref) const;
 
 		public: // fields
 			Size size;
