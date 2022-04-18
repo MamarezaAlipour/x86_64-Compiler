@@ -3,15 +3,14 @@
 #include <cstring>
 #include <malloc.h>
 #include <stdexcept>
-#include <unistd.h>
 #include <sys/mman.h>
+#include <unistd.h>
 
 #include <fstream>
 #include <iostream>
 #include <sstream>
 
-void testCommands() try
-{
+void testCommands() try {
 	using namespace x86_64;
 
 	Compiler c;
@@ -20,25 +19,22 @@ void testCommands() try
 	std::stringstream s;
 	std::size_t correct_count = 0;
 
-#define X(command, correct)                                              \
-    {                                                                    \
-        command;                                                         \
-        const auto &code = c.getCode();                                  \
-        code.write(bin);                                                 \
-        s << code;                                                       \
-        std::string space(std::max(0, 50 - int{strlen(#command)}), ' '); \
-        if (s.str() == correct)                                          \
-        {                                                                \
-            correct_count++;                                             \
-            space[space.size() - 2] = '+';                               \
-        }                                                                \
-        txt << #command << space << s.str()                              \
-            << (s.str() == correct ? "" : std::string(" ~ ") + correct)  \
-            << std::endl;                                                \
-        c.reset();                                                       \
-        s.str("");                                                       \
-        s.clear();                                                       \
-    }
+#define X(command, correct)                                                                                           \
+	{                                                                                                                 \
+		command;                                                                                                      \
+		auto const& code = c.getCode();                                                                               \
+		code.write(bin);                                                                                              \
+		s << code;                                                                                                    \
+		std::string space(std::max(0, 50 - int {strlen(#command)}), ' ');                                             \
+		if (s.str() == correct) {                                                                                     \
+			correct_count++;                                                                                          \
+			space[space.size() - 2] = '+';                                                                            \
+		}                                                                                                             \
+		txt << #command << space << s.str() << (s.str() == correct ? "" : std::string(" ~ ") + correct) << std::endl; \
+		c.reset();                                                                                                    \
+		s.str("");                                                                                                    \
+		s.clear();                                                                                                    \
+	}
 
 	// #include "commands.txt"
 
@@ -47,24 +43,18 @@ void testCommands() try
 	system("objdump -D -w -b binary -m i386:x86-64 dump.bin > disasm.txt");
 
 	std::cout << correct_count << std::endl;
-}
-catch (const std::exception& e)
-{
+} catch (std::exception const& e) {
 	std::cout << "error: " << e.what() << std::endl;
 }
 
 #pragma GCC push_options
 #pragma GCC optimize("O0")
 
-void puts_wrapper(const char* str)
-{
-	puts(str);
-}
+void puts_wrapper(char const* str) { puts(str); }
 
 #pragma GCC pop_options
 
-int main()
-{
+int main() {
 	// testCommands();
 	// return 0;
 
@@ -97,14 +87,11 @@ int main()
 	s << std::flush;
 	system("objdump -D -w -b binary -m i386:x86-64 dump.bin > disasm.txt");
 
-	const ByteArray& code = c.getCode();
+	ByteArray const& code = c.getCode();
 
-	if (mprotect(
-		reinterpret_cast<void*>(
-			reinterpret_cast<int64_t>(code.data()) & ~0xfff),
-		0x1000,
-		PROT_READ | PROT_WRITE | PROT_EXEC) == -1)
-	{
+	if (mprotect(reinterpret_cast<void*>(reinterpret_cast<int64_t>(code.data()) & ~0xfff),
+				 0x1000,
+				 PROT_READ | PROT_WRITE | PROT_EXEC) == -1) {
 		return 1;
 	}
 
